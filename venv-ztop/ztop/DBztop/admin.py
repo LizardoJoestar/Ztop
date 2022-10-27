@@ -8,16 +8,16 @@ class InventoryAdmin(admin.ModelAdmin):
     search_fields = ('location', 'dept', 'serial_num', 'inv_num')
 
 class ConsumablesAdmin(admin.ModelAdmin):
-    list_display = ('typeOf', 'brand')
-    search_fields = ('typeOf', 'brand')
+    list_display = ('ID_inv', 'typeOf', 'brand')
+    search_fields = ('ID_inv', 'typeOf', 'brand')
 
 class ItemTypeAdmin(admin.ModelAdmin):
-    list_display = ('typeOf', 'model', 'brand', 'color')
-    search_fields = ('typeOf', 'model', 'brand', 'color')
+    list_display = ('ID_inv', 'typeOf', 'model', 'brand', 'color')
+    search_fields = ('ID_inv', 'typeOf', 'model', 'brand', 'color')
 
 class HistoryAdmin(admin.ModelAdmin):
-    list_display = ('date', 'updated', 'user')
-    search_fields = ('date', 'updated', 'user')
+    list_display = ('ID_inv', 'date', 'updated', 'user')
+    search_fields = ('ID_inv', 'date', 'updated', 'user')
 
 class RequestAdmin(admin.ModelAdmin):
     list_display = ('ID_inv', 'ID_user', 'date', 'assignedTo')
