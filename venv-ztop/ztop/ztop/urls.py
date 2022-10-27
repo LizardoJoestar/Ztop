@@ -20,3 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls'))
 ]
+
+admin.site.site_header = 'Ztop admin panel'
+admin.site.site_title = 'Ztop'
