@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
+# Also include any admin panel modules you want, such as
+# search function, list of columns to display, etc
+# for each model
 
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ['location', 'dept', 'serial_num', 'inv_num']
@@ -9,19 +12,24 @@ class InventoryAdmin(admin.ModelAdmin):
 
 class ConsumablesAdmin(admin.ModelAdmin):
     list_display = ('ID_inv', 'typeOf', 'brand')
-    search_fields = ('ID_inv', 'typeOf', 'brand')
+    search_fields = ('ID_inv__inv_num', 'typeOf', 'brand')
 
 class ItemTypeAdmin(admin.ModelAdmin):
-    list_display = ('ID_inv', 'typeOf', 'model', 'brand', 'color')
-    search_fields = ('ID_inv', 'typeOf', 'model', 'brand', 'color')
+    list_display = ['ID_inv', 'typeOf', 'model', 'brand', 'color']
+    # If you look up on foreign key fields, make sure to also reference the 
+    # other model field that it points to, with '__' notation
+    # otherwise, you'll get a 'Related Field got invalid lookup: icontains'
+    # because icontains search function only accepts CharField or TextField,
+    # not classes referenced by foreign keys
+    search_fields = ['ID_inv__inv_num', 'typeOf', 'model', 'brand', 'color']
 
 class HistoryAdmin(admin.ModelAdmin):
     list_display = ('ID_inv', 'date', 'updated', 'user')
-    search_fields = ('ID_inv', 'date', 'updated', 'user')
+    search_fields = ('ID_inv__inv_num', 'date', 'updated', 'user')
 
 class RequestAdmin(admin.ModelAdmin):
     list_display = ('ID_inv', 'ID_user', 'date', 'assignedTo')
-    search_fields = ('ID_inv', 'ID_user', 'date', 'assignedTo')
+    search_fields = ('ID_inv__inv_num', 'ID_user', 'date', 'assignedTo')
     
 class UserRegularAdmin(admin.ModelAdmin):
     list_display = ('name', 'dept', 'position', 'email')
@@ -33,7 +41,7 @@ class UserTechAdmin(admin.ModelAdmin):
 
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('ID_req', 'ID_tech', 'assigned', 'dateCreation', 'dateAssign', 'dateFinish')
-    search_fields = ('ID_req', 'ID_tech', 'assigned', 'dateCreation', 'dateAssign', 'dateFinish')
+    search_fields = ('ID_req__date', 'ID_tech__name', 'assigned', 'dateCreation', 'dateAssign', 'dateFinish')
 
 admin.site.register(Inventory, InventoryAdmin)
 admin.site.register(Consumables, ConsumablesAdmin)

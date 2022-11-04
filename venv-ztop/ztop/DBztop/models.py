@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 # Create your models here.
 
@@ -17,7 +18,11 @@ class Inventory(models.Model):
     class Meta:
         verbose_name_plural = 'Inventory'
         constraints = [
-            models.UniqueConstraint(fields=['serial_num', 'inv_num'], name = 'unique_idnumbers')
+            models.UniqueConstraint(fields=['serial_num'], name='unique_serial'),
+            models.UniqueConstraint(fields=['inv_num'], name='unique_inv'),
+            models.UniqueConstraint(fields=['serial_num', 'inv_num'], name = 'unique_idnumbers'),
+            models.CheckConstraint(check=Q(inv_num__endswith='_ITT') | Q(inv_num__endswith='_Otay') | Q(inv_num__endswith='_Radio'), name='check_inv_location'),
+            models.CheckConstraint(check=Q(location__iexact='tomas aquino') | Q(location__iexact='otay') | Q(location__iexact='fracc monterrey'), name='check_location')
         ]
 
 class Consumables(models.Model):
