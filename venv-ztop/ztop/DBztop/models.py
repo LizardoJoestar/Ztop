@@ -5,11 +5,12 @@ from django.db.models import Q
 
 # Inventory section of the database
 
+
 class Inventory(models.Model):
     location = models.CharField(max_length=50)
     dept = models.CharField(max_length=50)
     serial_num = models.CharField(max_length=50)
-    inv_num =  models.CharField(max_length=50)
+    inv_num = models.CharField(max_length=50)
 
     def __str__(self):
         return self.inv_num
@@ -18,15 +19,20 @@ class Inventory(models.Model):
     class Meta:
         verbose_name_plural = 'Inventory'
         constraints = [
-            models.UniqueConstraint(fields=['serial_num'], name='unique_serial'),
+            models.UniqueConstraint(
+                fields=['serial_num'], name='unique_serial'),
             models.UniqueConstraint(fields=['inv_num'], name='unique_inv'),
-            models.UniqueConstraint(fields=['serial_num', 'inv_num'], name = 'unique_idnumbers'),
-            models.CheckConstraint(check=Q(inv_num__endswith='_ITT') | Q(inv_num__endswith='_Otay') | Q(inv_num__endswith='_Radio'), name='check_inv_location'),
-            models.CheckConstraint(check=Q(location__iexact='tomas aquino') | Q(location__iexact='otay') | Q(location__iexact='fracc monterrey'), name='check_location')
+            models.UniqueConstraint(
+                fields=['serial_num', 'inv_num'], name='unique_idnumbers'),
+            models.CheckConstraint(check=Q(inv_num__endswith='_ITT') | Q(
+                inv_num__endswith='_Otay') | Q(inv_num__endswith='_Radio'), name='check_inv_location'),
+            models.CheckConstraint(check=Q(location__iexact='tomas aquino') | Q(
+                location__iexact='otay') | Q(location__iexact='fracc monterrey'), name='check_location')
         ]
 
+
 class Consumables(models.Model):
-    ID_inv = models.ForeignKey(Inventory, on_delete = models.CASCADE)
+    ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     typeOf = models.CharField(max_length=50)
     brand = models.CharField(max_length=50)
 
@@ -36,24 +42,178 @@ class Consumables(models.Model):
     class Meta:
         verbose_name_plural = 'Consumables'
 
+
 class ItemType(models.Model):
-    ID_inv = models.ForeignKey(Inventory, on_delete = models.CASCADE)
-    typeOf = models.CharField(max_length=50)
+    # Monitor ports constants
+    AVAILABLE = 'available'
+    UNAVAILABE = 'unavailable'
+    INVALID = 'invalid'
+
+    MONITOR_PORT_CHOICES = [
+        (AVAILABLE, 'Available'),
+        (UNAVAILABE, 'Unavailable'),
+        (INVALID, 'Does not apply')
+    ]
+
+    # OS choice constants
+    LINUX = 'linux'
+    MACOS = 'macos'
+    WINDOWS_XP = 'w_xp'
+    WINDOWS_VISTA = 'w_vista'
+    WINDOWS_7 = 'w_7'
+    WINDOWS_8 = 'w_8'
+    WINDOWS_10 = 'W_10'
+    WINDOWS_11 = 'w_11'
+    WINDOWS_SERVER = 'w_server'
+    NONE = 'none'
+
+    OS_CHOICES = [
+        (LINUX, 'Linux'),
+        (MACOS, 'MacOS'),
+        (WINDOWS_XP, 'Windows XP'),
+        (WINDOWS_VISTA, 'Windows Vista'),
+        (WINDOWS_7, 'Windows 7'),
+        (WINDOWS_8, 'Windows 8'),
+        (WINDOWS_10, 'Windows 10'),
+        (WINDOWS_11, 'Windows 11'),
+        (NONE, 'None')
+    ]
+
+    # Drive type constants
+    HDD = 'hdd'
+    SSD = 'ssd'
+
+    DRIVE_TYPE_CHOICES = [
+        (HDD, 'Mechanical Disk (HDD)'),
+        (SSD, 'Solid State Disk (SSD)'),
+        (NONE, 'None')
+    ]
+
+    # Item type constants
+    PC = 'pc'
+    MONITOR = 'monitor'
+
+    ITEM_TYPE_CHOICES = [
+        (PC, 'PC'),
+        (MONITOR, 'Monitor')
+    ]
+
+    # General characteristics. Defines item type and general attributes
+    ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+
+    typeOf = models.CharField(
+        max_length=10,
+        choices=ITEM_TYPE_CHOICES
+    )
+
     model = models.CharField(max_length=100)
     brand = models.CharField(max_length=50)
     color = models.CharField(max_length=50)
+
+    # Monitor specific attributes
+    vga = models.CharField(
+        max_length=20,
+        choices=MONITOR_PORT_CHOICES,
+        default=INVALID
+    )
+
+    hdmi = models.CharField(
+        max_length=20,
+        choices=MONITOR_PORT_CHOICES,
+        default=INVALID
+    )
+
+    display_port = models.CharField(
+        max_length=20,
+        choices=MONITOR_PORT_CHOICES,
+        default=INVALID
+    )
+
+    screen_size = models.IntegerField()
+
+    # PC specific attributes
+    os = models.CharField(
+        max_length=20,
+        choices=OS_CHOICES,
+        default=WINDOWS_10
+    )
+
+    ram = models.IntegerField()
+    cpu = models.CharField(max_length=50)
+
+    driveType = models.CharField(
+        max_length=5,
+        choices=DRIVE_TYPE_CHOICES,
+        default=HDD
+    )
+
+    driveSize = models.IntegerField()
 
     def __str__(self):
         return self.typeOf + ' ' + self.brand + ' ' + self.model
 
     class Meta:
         verbose_name_plural = 'ItemType'
-    
+
+
 class History(models.Model):
-    ID_inv = models.ForeignKey(Inventory, on_delete = models.CASCADE) 
+    # OS choice constants
+    LINUX = 'linux'
+    MACOS = 'macos'
+    WINDOWS_XP = 'w_xp'
+    WINDOWS_VISTA = 'w_vista'
+    WINDOWS_7 = 'w_7'
+    WINDOWS_8 = 'w_8'
+    WINDOWS_10 = 'W_10'
+    WINDOWS_11 = 'w_11'
+    WINDOWS_SERVER = 'w_server'
+    NONE = 'none'
+
+    OS_CHOICES = [
+        (LINUX, 'Linux'),
+        (MACOS, 'MacOS'),
+        (WINDOWS_XP, 'Windows XP'),
+        (WINDOWS_VISTA, 'Windows Vista'),
+        (WINDOWS_7, 'Windows 7'),
+        (WINDOWS_8, 'Windows 8'),
+        (WINDOWS_10, 'Windows 10'),
+        (WINDOWS_11, 'Windows 11'),
+        (NONE, 'None')
+    ]
+
+    # Drive type constants
+    HDD = 'hdd'
+    SSD = 'ssd'
+
+    DRIVE_TYPE_CHOICES = [
+        (HDD, 'Mechanical Disk (HDD)'),
+        (SSD, 'Solid State Disk (SSD)'),
+        (NONE, 'None')
+    ]
+
+    # History log fields
+    ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     date = models.DateTimeField('Date logged')
-    updated = models.BooleanField()
+    location = models.CharField(max_length=50)  # This must be Unit + Dept
     user = models.CharField(max_length=100)
+    job_notes = models.TextField()
+
+    # Component fields, at time of logging
+    os = models.CharField(
+        max_length=20,
+        choices=OS_CHOICES,
+        default=NONE
+    )
+
+    driveType = models.CharField(
+        max_length=10,
+        choices=DRIVE_TYPE_CHOICES,
+        default=NONE
+    )
+
+    driveSize = models.IntegerField()
+    ram = models.IntegerField()
+    cpu = models.CharField(max_length=50)
 
     def __str__(self):
         return str(self.date)
@@ -63,20 +223,23 @@ class History(models.Model):
 
 # Ticket and users section of the database
 
+
 class UserRegular(models.Model):
     name = models.CharField(max_length=100)
     dept = models.CharField(max_length=50)
     position = models.CharField(max_length=100)
     email = models.EmailField()
-    
+
     def __str__(self):
         return self.name + ' ' + self.dept
 
     class Meta:
         verbose_name_plural = 'UserRegular'
         constraints = [
-            models.UniqueConstraint(fields=['name', 'email'], name='unique_employee')
+            models.UniqueConstraint(
+                fields=['name', 'email'], name='unique_employee')
         ]
+
 
 class UserTech(models.Model):
     name = models.CharField(max_length=100)
@@ -86,17 +249,19 @@ class UserTech(models.Model):
     roles = models.CharField(max_length=300)
 
     def __str__(self):
-        return self.name + ' ' + self.dept 
-    
+        return self.name + ' ' + self.dept
+
     class Meta:
         verbose_name_plural = 'UserTech'
         constraints = [
-            models.UniqueConstraint(fields=['name', 'email'], name='unique_technician')
+            models.UniqueConstraint(
+                fields=['name', 'email'], name='unique_technician')
         ]
 
+
 class Request(models.Model):
-    ID_inv = models.ForeignKey(Inventory, on_delete = models.CASCADE)
-    ID_user = models.ForeignKey(UserRegular, on_delete = models.CASCADE)
+    ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    ID_user = models.ForeignKey(UserRegular, on_delete=models.CASCADE)
     date = models.DateTimeField('Date created')
     assignedTo = models.CharField(max_length=100)
 
@@ -106,9 +271,10 @@ class Request(models.Model):
     class Meta:
         verbose_name_plural = 'Request'
 
+
 class Ticket(models.Model):
-    ID_req = models.ForeignKey(Request, on_delete = models.CASCADE)
-    ID_tech = models.ForeignKey(UserTech, on_delete = models.CASCADE)
+    ID_req = models.ForeignKey(Request, on_delete=models.CASCADE)
+    ID_tech = models.ForeignKey(UserTech, on_delete=models.CASCADE)
     assigned = models.BooleanField()
     dateCreation = models.DateTimeField('Date created')
     dateAssign = models.DateTimeField('Date assigned', null=True, blank=True)
@@ -119,6 +285,3 @@ class Ticket(models.Model):
 
     class Meta:
         verbose_name_plural = 'Ticket'
-    
-
-
