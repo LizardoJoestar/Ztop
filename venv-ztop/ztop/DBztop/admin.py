@@ -33,7 +33,7 @@ class HistoryAdmin(admin.ModelAdmin):
     list_display = ('ID_inv', 'date', 'location', 'user',
                     'job_notes', 'os', 'ram', 'cpu', 'driveType', 'driveSize')
     search_fields = ('ID_inv', 'date', 'location', 'user',
-                    'job_notes', 'os', 'ram', 'cpu', 'driveType', 'driveSize')
+                     'job_notes', 'os', 'ram', 'cpu', 'driveType', 'driveSize')
 
 
 class RequestAdmin(admin.ModelAdmin):

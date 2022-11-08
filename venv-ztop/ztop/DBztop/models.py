@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Q
+from .field_choices import *
 
 # Create your models here.
 
@@ -8,7 +9,10 @@ from django.db.models import Q
 
 class Inventory(models.Model):
     location = models.CharField(max_length=50)
-    dept = models.CharField(max_length=50)
+    dept = models.CharField(
+        max_length=50,
+        choices=DEPARTMENTS_CHOICES
+    )
     serial_num = models.CharField(max_length=50)
     inv_num = models.CharField(max_length=50)
 
@@ -44,60 +48,6 @@ class Consumables(models.Model):
 
 
 class ItemType(models.Model):
-    # Monitor ports constants
-    AVAILABLE = 'available'
-    UNAVAILABE = 'unavailable'
-    INVALID = 'invalid'
-
-    MONITOR_PORT_CHOICES = [
-        (AVAILABLE, 'Available'),
-        (UNAVAILABE, 'Unavailable'),
-        (INVALID, 'Does not apply')
-    ]
-
-    # OS choice constants
-    LINUX = 'linux'
-    MACOS = 'macos'
-    WINDOWS_XP = 'w_xp'
-    WINDOWS_VISTA = 'w_vista'
-    WINDOWS_7 = 'w_7'
-    WINDOWS_8 = 'w_8'
-    WINDOWS_10 = 'W_10'
-    WINDOWS_11 = 'w_11'
-    WINDOWS_SERVER = 'w_server'
-    NONE = 'none'
-
-    OS_CHOICES = [
-        (LINUX, 'Linux'),
-        (MACOS, 'MacOS'),
-        (WINDOWS_XP, 'Windows XP'),
-        (WINDOWS_VISTA, 'Windows Vista'),
-        (WINDOWS_7, 'Windows 7'),
-        (WINDOWS_8, 'Windows 8'),
-        (WINDOWS_10, 'Windows 10'),
-        (WINDOWS_11, 'Windows 11'),
-        (NONE, 'None')
-    ]
-
-    # Drive type constants
-    HDD = 'hdd'
-    SSD = 'ssd'
-
-    DRIVE_TYPE_CHOICES = [
-        (HDD, 'Mechanical Disk (HDD)'),
-        (SSD, 'Solid State Disk (SSD)'),
-        (NONE, 'None')
-    ]
-
-    # Item type constants
-    PC = 'pc'
-    MONITOR = 'monitor'
-
-    ITEM_TYPE_CHOICES = [
-        (PC, 'PC'),
-        (MONITOR, 'Monitor')
-    ]
-
     # General characteristics. Defines item type and general attributes
     ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
 
@@ -157,40 +107,6 @@ class ItemType(models.Model):
 
 
 class History(models.Model):
-    # OS choice constants
-    LINUX = 'linux'
-    MACOS = 'macos'
-    WINDOWS_XP = 'w_xp'
-    WINDOWS_VISTA = 'w_vista'
-    WINDOWS_7 = 'w_7'
-    WINDOWS_8 = 'w_8'
-    WINDOWS_10 = 'W_10'
-    WINDOWS_11 = 'w_11'
-    WINDOWS_SERVER = 'w_server'
-    NONE = 'none'
-
-    OS_CHOICES = [
-        (LINUX, 'Linux'),
-        (MACOS, 'MacOS'),
-        (WINDOWS_XP, 'Windows XP'),
-        (WINDOWS_VISTA, 'Windows Vista'),
-        (WINDOWS_7, 'Windows 7'),
-        (WINDOWS_8, 'Windows 8'),
-        (WINDOWS_10, 'Windows 10'),
-        (WINDOWS_11, 'Windows 11'),
-        (NONE, 'None')
-    ]
-
-    # Drive type constants
-    HDD = 'hdd'
-    SSD = 'ssd'
-
-    DRIVE_TYPE_CHOICES = [
-        (HDD, 'Mechanical Disk (HDD)'),
-        (SSD, 'Solid State Disk (SSD)'),
-        (NONE, 'None')
-    ]
-
     # History log fields
     ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     date = models.DateTimeField('Date logged')
