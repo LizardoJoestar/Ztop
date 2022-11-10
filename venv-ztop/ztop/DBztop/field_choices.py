@@ -126,3 +126,17 @@ ITEM_TYPE_CHOICES = [
     (PC, 'PC'),
     (MONITOR, 'Monitor')
 ]
+
+###############################################################################
+
+# Location constants
+
+TOMAS_AQ = 'tomas aquino'
+OTAY = 'otay'
+FRACC_MONTERREY = 'fracc monterrey'
+
+LOCATION_CHOICES = [
+    (TOMAS_AQ, 'Tomás Aquino'),
+    (OTAY, 'Otay'),
+    (FRACC_MONTERREY, 'Fracc. Monterrey')
+]

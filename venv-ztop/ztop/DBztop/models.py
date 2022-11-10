@@ -8,7 +8,10 @@ from .field_choices import *
 
 
 class Inventory(models.Model):
-    location = models.CharField(max_length=50)
+    location = models.CharField(
+        max_length=50,
+        choices=LOCATION_CHOICES
+    )
     dept = models.CharField(
         max_length=50,
         choices=DEPARTMENTS_CHOICES
