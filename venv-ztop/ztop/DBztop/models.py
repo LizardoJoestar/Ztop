@@ -145,7 +145,7 @@ class History(models.Model):
 
 class UserRegular(models.Model):
     name = models.CharField(max_length=100)
-    dept = models.CharField(max_length=50)
+    dept = models.CharField(max_length=50, choices=DEPARTMENTS_CHOICES)
     position = models.CharField(max_length=100)
     email = models.EmailField()
 
@@ -162,7 +162,7 @@ class UserRegular(models.Model):
 
 class UserTech(models.Model):
     name = models.CharField(max_length=100)
-    dept = models.CharField(max_length=50)
+    dept = models.CharField(max_length=50, choices=DEPARTMENTS_CHOICES)
     position = models.CharField(max_length=100)
     email = models.EmailField()
     roles = models.CharField(max_length=300)
