@@ -4,12 +4,12 @@ from django.http import HttpResponse
 
 def index(request):
     #return HttpResponse("Ticket Generation Form Goes Here:")
-    if(request.method=='POST'):
-        ID_req = request.POST.get('name')
-        ID_tech = request.POST.get('name')
-        assigned = models.BooleanField()
-        dateCreation = models.DateTimeField('Date created')
-        dateAssign = models.DateTimeField('Date assigned', null=True, blank=True)
-        dateFinish = models.DateTimeField('Date finished', null=True, blank=True)
+    #if(request.method=='POST'):
+     #   ID_req = request.POST.get('name')
+      #  ID_tech = request.POST.get('name')
+       # assigned = models.BooleanField()
+        #dateCreation = models.DateTimeField('Date created')
+        #dateAssign = models.DateTimeField('Date assigned', null=True, blank=True)
+        #dateFinish = models.DateTimeField('Date finished', null=True, blank=True)
 
-    return render(request, 'index.html')
+    return render(request, 'ticket/ticket.html')
