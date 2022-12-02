@@ -19,6 +19,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls'))
+    path('ticket/', include('ticket.urls'))
 ]
 
 admin.site.site_header = 'Ztop admin panel'
