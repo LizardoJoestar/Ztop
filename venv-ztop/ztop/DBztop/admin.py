@@ -44,7 +44,7 @@ class HistoryAdmin(admin.ModelAdmin):
 
 class RequestAdmin(admin.ModelAdmin):
     # This filter shows all users with their related requests
-    list_filter = ('ID_user__name',)
+    list_filter = ('ID_user__name', 'assignedTo')
     list_display = ('ID_inv', 'ID_user', 'date', 'assignedTo')
     search_fields = ('ID_inv__inv_num', 'ID_user', 'date', 'assignedTo')
 
@@ -66,7 +66,7 @@ class TicketAdmin(admin.ModelAdmin):
     # SELECT * FROM Ticket t
     # INNER JOIN Request req ON t.ID_req=req.ID_req
     # INNER JOIN UserRegular ur ON req.ID_user=ur.ID_user
-    list_filter = ('ID_req__ID_user__name',)
+    list_filter = ('ID_req__ID_user__name', 'ID_tech', 'assigned')
     list_display = ('ID_req', 'ID_tech', 'assigned',
                     'dateCreation', 'dateAssign', 'dateFinish')
     search_fields = ('ID_req__date', 'ID_tech__name', 'assigned',

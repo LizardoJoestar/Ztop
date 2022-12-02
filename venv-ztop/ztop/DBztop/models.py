@@ -1,8 +1,41 @@
 from django.db import models
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from .field_choices import *
 
 # Create your models here.
+
+# VALIDATORS
+
+
+def validate_req_date(value):
+    dates = []
+
+    for req in Request.objects.all():
+        dates.append(req.date)
+
+    if value not in dates:
+        raise ValidationError(
+            _('%(value)s is not from a valid request'),
+            params={'value': value}
+        )
+
+
+def get_req_dates():
+    temp = []
+    dates = []
+
+    for req in Request.objects.all():
+        temp.append(req.date)
+
+    for date in temp:
+        # First value must remain as a datetime object.
+        # Second value must be converted to a readale string.
+        dates.append((date, str(date)))
+
+    return dates
+
 
 # Inventory section of the database
 
@@ -181,8 +214,14 @@ class UserTech(models.Model):
 class Request(models.Model):
     ID_inv = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     ID_user = models.ForeignKey(UserRegular, on_delete=models.CASCADE)
+
+    assignedTo = models.ForeignKey(
+        UserTech,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
     date = models.DateTimeField('Date created')
-    assignedTo = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.date)
@@ -193,9 +232,19 @@ class Request(models.Model):
 
 class Ticket(models.Model):
     ID_req = models.ForeignKey(Request, on_delete=models.CASCADE)
-    ID_tech = models.ForeignKey(UserTech, on_delete=models.CASCADE)
+
+    ID_tech = models.ForeignKey(
+        UserTech,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
     assigned = models.BooleanField()
-    dateCreation = models.DateTimeField('Date created')
+    dateCreation = models.DateTimeField(
+        'Date created',
+        validators=[validate_req_date],
+        choices=get_req_dates()
+    )
     dateAssign = models.DateTimeField('Date assigned', null=True, blank=True)
     dateFinish = models.DateTimeField('Date finished', null=True, blank=True)
 

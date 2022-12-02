@@ -140,3 +140,5 @@ LOCATION_CHOICES = [
     (OTAY, 'Otay'),
     (FRACC_MONTERREY, 'Fracc. Monterrey')
 ]
+
+###############################################################################
